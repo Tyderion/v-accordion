@@ -15,10 +15,12 @@ function vPaneHeaderDirective () {
     link: function (scope, iElement, iAttrs, paneCtrl) {
       iAttrs.$set('role', 'tab');
 
-      iElement.on('click', function () {
-        scope.$apply(function () {
-          paneCtrl.toggle();
-        });
+      iElement.on('click', function (e) {
+        if (!e.target.classList.contains('v-accordion-header-ignore-click')) {
+          scope.$apply(function() {
+            paneCtrl.toggle();
+          });
+        }
       });
     }
   };

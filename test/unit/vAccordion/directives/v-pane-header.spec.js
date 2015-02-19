@@ -21,6 +21,10 @@ describe('v-pane-header directive', function () {
         template += '</v-pane>\n';
         template += '</v-accordion>';
 
+    if (options && options.ignoreClick) {
+      template = template.replace('<v-pane-header>', '<v-pane-header class="v-accordion-header-ignore-click">');
+    }
+
     return template;
   };
 
@@ -41,13 +45,13 @@ describe('v-pane-header directive', function () {
         var fails = [];
         var actual = this.actual;
         this.message = function() {
-          return 'Expected ' + angular.mock.dump(actual) + (this.isNot ? ' not ' : ' ') + 
+          return 'Expected ' + angular.mock.dump(actual) + (this.isNot ? ' not ' : ' ') +
             'to be the active tab. Failures: ' + fails.join(', ');
         };
 
         if (actual.attr('aria-selected') != 'true') {
           fails.push('aria-selected is not true');
-        } 
+        }
         if (actual.attr('tabindex') != '0') {
           fails.push('tabindex is not 0');
         }
@@ -59,7 +63,7 @@ describe('v-pane-header directive', function () {
   afterEach(function () {
     scope.$destroy();
   });
-  
+
 
 
   it('should throw an error if `v-pane` directive controller can\'t be found', function () {
@@ -116,5 +120,26 @@ describe('v-pane-header directive', function () {
     expect(paneHeader.attr('aria-selected')).toBe('true');
     expect(paneHeader.attr('tabindex')).toBe('0');
   });
+
+  iit('should not toggle the pane when clicking header contains class \'v-accordion-header-ignore-click\'', function() {
+    var template =  generateTemplate({ ignoreClick: true });
+
+    var accordion = $compile(template)(scope);
+    var pane = accordion.find('v-pane');
+    var paneHeader = accordion.find('v-pane-header');
+
+    var paneIsolateScope = pane.isolateScope();
+    paneIsolateScope.$digest();
+
+    expect(paneIsolateScope.isExpanded).toBe(false);
+    expect(paneHeader.attr('aria-selected')).toBe('false');
+    expect(paneHeader.attr('tabindex')).toBe('-1');
+
+    paneHeader.click();
+
+    expect(paneIsolateScope.isExpanded).toBe(false);
+    expect(paneHeader.attr('aria-selected')).toBe('false');
+    expect(paneHeader.attr('tabindex')).toBe('-1');
+  })
 
 });

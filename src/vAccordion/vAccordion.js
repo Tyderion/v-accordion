@@ -11,7 +11,7 @@ angular.module('vAccordion.config', [])
 
 // Modules
 angular.module('vAccordion.directives', []);
-angular.module('vAccordion', 
+angular.module('vAccordion',
   [
     'vAccordion.config',
     'vAccordion.directives'

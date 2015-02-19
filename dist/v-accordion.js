@@ -21,7 +21,7 @@ angular.module('vAccordion.config', [])
 
 // Modules
 angular.module('vAccordion.directives', []);
-angular.module('vAccordion', 
+angular.module('vAccordion',
   [
     'vAccordion.config',
     'vAccordion.directives'
@@ -255,10 +255,12 @@ function vPaneHeaderDirective () {
     link: function (scope, iElement, iAttrs, paneCtrl) {
       iAttrs.$set('role', 'tab');
 
-      iElement.on('click', function () {
-        scope.$apply(function () {
-          paneCtrl.toggle();
-        });
+      iElement.on('click', function (e) {
+        if (!e.target.classList.contains('sv-accordion-header-ignore-click')) {
+          scope.$apply(function() {
+            paneCtrl.toggle();
+          });
+        }
       });
     }
   };
