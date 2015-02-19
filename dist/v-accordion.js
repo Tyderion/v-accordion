@@ -256,7 +256,7 @@ function vPaneHeaderDirective () {
       iAttrs.$set('role', 'tab');
 
       iElement.on('click', function (e) {
-        if (!e.target.classList.contains('sv-accordion-header-ignore-click')) {
+        if (!e.target.classList.contains('v-accordion-header-ignore-click')) {
           scope.$apply(function() {
             paneCtrl.toggle();
           });
