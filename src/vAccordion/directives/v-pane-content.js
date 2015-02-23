@@ -1,6 +1,12 @@
 
 
 // vPaneContent directive
+/**
+ * @ngdoc directive
+ * @restrict E
+ * @module vAccordion.directives
+ * @name vPaneContent
+ */
 angular.module('vAccordion.directives')
   .directive('vPaneContent', vPaneContentDirective);
 

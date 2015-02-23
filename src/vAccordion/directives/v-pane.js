@@ -1,6 +1,13 @@
 
 
 // vPane directive
+/**
+ * @ngdoc directive
+ * @restrict E
+ * @module vAccordion.directives
+ * @name vPane
+ * @param {=} [expanded] if Present the pane defaults to expanded
+ */
 angular.module('vAccordion.directives')
   .directive('vPane', vPaneDirective);
 
@@ -104,7 +111,7 @@ function vPaneDirective ($timeout, $animate, accordionConfig) {
       scope.$watch('isExpanded', function (newValue, oldValue) {
         if (newValue === oldValue) { return true; }
         if (newValue) { expand(); }
-        else { collapse(); }            
+        else { collapse(); }
       });
     }
   };

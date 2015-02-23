@@ -1,6 +1,12 @@
 
 
 // vPaneHeader directive
+/**
+ * @ngdoc directive
+ * @restrict E
+ * @module vAccordion.directives
+ * @name vPaneHeader
+ */
 angular.module('vAccordion.directives')
   .directive('vPaneHeader', vPaneHeaderDirective);
 
