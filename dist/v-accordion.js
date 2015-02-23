@@ -31,6 +31,16 @@ angular.module('vAccordion',
 
 
 // vAccordion directive
+/**
+ * @ngdoc directive
+ * @restrict E
+ * @module vAccordion.directives
+ * @name vAccordion
+ * @param {=} [multiple] the Filter object
+ * @param {function} [onexpand] the Filter object
+ * @param {function} [oncollapse] the Filter object
+ * @param {function} [control] the controller variable name
+ */
 angular.module('vAccordion.directives')
   .directive('vAccordion', vAccordionDirective);
 
@@ -50,7 +60,7 @@ function vAccordionDirective () {
       transclude(scope.$parent, function(clone) {
         iElement.append(clone);
       });
-      
+
       var protectedApiMethods = ['toggle', 'expand', 'collapse', 'expandAll', 'collapseAll'];
 
       function checkCustomControlAPIMethods () {
@@ -76,7 +86,7 @@ function vAccordionDirective () {
 
         var mergedControl = angular.extend({}, scope.internalControl, scope.control);
         scope.control = scope.internalControl = mergedControl;
-      } 
+      }
       else {
         scope.control = scope.internalControl;
       }
@@ -107,7 +117,7 @@ function AccordionDirectiveController ($scope) {
 
     return bool;
   };
-  
+
   ctrl.getPaneByIndex = function (index) {
     return $scope.panes[index];
   };
@@ -129,7 +139,7 @@ function AccordionDirectiveController ($scope) {
     if (!$scope.allowMultiple) {
       if (ctrl.hasExpandedPane() && paneToAdd.isExpanded) {
         throw new Error('The `multiple` attribute can\'t be found');
-      } 
+      }
     }
 
     $scope.panes.push(paneToAdd);
@@ -170,7 +180,7 @@ function AccordionDirectiveController ($scope) {
 
   ctrl.collapse = function (paneToCollapse) {
     if (isDisabled || !paneToCollapse) { return; }
-    
+
     if (paneToCollapse.isExpanded) {
       paneToCollapse.isExpanded = false;
       $scope.collapseCb({ index: ctrl.getPaneIndex(paneToCollapse) });
@@ -220,6 +230,12 @@ AccordionDirectiveController.$inject = ['$scope'];
 
 
 // vPaneContent directive
+/**
+ * @ngdoc directive
+ * @restrict E
+ * @module vAccordion.directives
+ * @name vPaneContent
+ */
 angular.module('vAccordion.directives')
   .directive('vPaneContent', vPaneContentDirective);
 
@@ -241,6 +257,12 @@ function vPaneContentDirective () {
 
 
 // vPaneHeader directive
+/**
+ * @ngdoc directive
+ * @restrict E
+ * @module vAccordion.directives
+ * @name vPaneHeader
+ */
 angular.module('vAccordion.directives')
   .directive('vPaneHeader', vPaneHeaderDirective);
 
@@ -270,6 +292,13 @@ function vPaneHeaderDirective () {
 
 
 // vPane directive
+/**
+ * @ngdoc directive
+ * @restrict E
+ * @module vAccordion.directives
+ * @name vPane
+ * @param {=} [expanded] if Present the pane defaults to expanded
+ */
 angular.module('vAccordion.directives')
   .directive('vPane', vPaneDirective);
 
@@ -373,7 +402,7 @@ function vPaneDirective ($timeout, $animate, accordionConfig) {
       scope.$watch('isExpanded', function (newValue, oldValue) {
         if (newValue === oldValue) { return true; }
         if (newValue) { expand(); }
-        else { collapse(); }            
+        else { collapse(); }
       });
     }
   };
