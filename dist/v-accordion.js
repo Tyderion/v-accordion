@@ -8,13 +8,12 @@
 
 (function (angular) {
 'use strict';
-
-
 // Config
 angular.module('vAccordion.config', [])
   .constant('accordionConfig', {
     states: {
-      expanded: 'is-expanded'
+      expanded: 'is-expanded',
+      collapsed: 'is-collapsed'
     }
   });
 
@@ -289,8 +288,6 @@ function vPaneHeaderDirective () {
 }
 
 
-
-
 // vPane directive
 /**
  * @ngdoc directive
@@ -303,7 +300,7 @@ angular.module('vAccordion.directives')
   .directive('vPane', vPaneDirective);
 
 
-function vPaneDirective ($timeout, $animate, accordionConfig) {
+function vPaneDirective($timeout, $animate, accordionConfig, $q) {
   return {
     restrict: 'E',
     require: '^vAccordion',
@@ -324,8 +321,8 @@ function vPaneDirective ($timeout, $animate, accordionConfig) {
       var states = accordionConfig.states;
 
       var paneHeader = iElement.find('v-pane-header'),
-          paneContent = iElement.find('v-pane-content'),
-          paneInner = paneContent.find('div');
+        paneContent = iElement.find('v-pane-content'),
+        paneInner = paneContent.find('div');
 
       if (!paneHeader[0]) {
         throw new Error('The `v-pane-header` directive can\'t be found');
@@ -338,7 +335,7 @@ function vPaneDirective ($timeout, $animate, accordionConfig) {
       accordionCtrl.addPane(scope);
       scope.accordionCtrl = accordionCtrl;
 
-      function expand () {
+      function expand() {
         accordionCtrl.disable();
 
         paneContent[0].style.maxHeight = '0px';
@@ -348,7 +345,10 @@ function vPaneDirective ($timeout, $animate, accordionConfig) {
         });
 
         $timeout(function () {
-          $animate.addClass(iElement, states.expanded)
+          $q.all([
+            $animate.addClass(iElement, states.expanded),
+            $animate.removeClass(iElement, states.collapsed)
+          ])
             .then(function () {
               accordionCtrl.enable();
               paneContent[0].style.maxHeight = 'none';
@@ -360,7 +360,7 @@ function vPaneDirective ($timeout, $animate, accordionConfig) {
         }, 0);
       }
 
-      function collapse () {
+      function collapse() {
         accordionCtrl.disable();
 
         paneContent[0].style.maxHeight = paneInner[0].offsetHeight + 'px';
@@ -370,7 +370,10 @@ function vPaneDirective ($timeout, $animate, accordionConfig) {
         });
 
         $timeout(function () {
-          $animate.removeClass(iElement, states.expanded)
+          $q.all([
+            $animate.removeClass(iElement, states.expanded),
+            $animate.addClass(iElement, states.collapsed)
+          ])
             .then(function () {
               accordionCtrl.enable();
             });
@@ -390,6 +393,7 @@ function vPaneDirective ($timeout, $animate, accordionConfig) {
           'tabindex': 0
         });
       } else {
+        iElement.addClass(states.collapsed);
         paneHeader.attr('aria-selected', 'false');
         paneContent[0].style.maxHeight = '0px';
 
@@ -400,18 +404,24 @@ function vPaneDirective ($timeout, $animate, accordionConfig) {
       }
 
       scope.$watch('isExpanded', function (newValue, oldValue) {
-        if (newValue === oldValue) { return true; }
-        if (newValue) { expand(); }
-        else { collapse(); }
+        if (newValue === oldValue) {
+          return true;
+        }
+        if (newValue) {
+          expand();
+        }
+        else {
+          collapse();
+        }
       });
     }
   };
 }
-vPaneDirective.$inject = ['$timeout', '$animate', 'accordionConfig'];
+vPaneDirective.$inject = ['$timeout', '$animate', 'accordionConfig', '$q'];
 
 
 // vPane directive controller
-function PaneDirectiveController ($scope) {
+function PaneDirectiveController($scope) {
   var ctrl = this;
 
   ctrl.toggle = function () {

@@ -1,10 +1,9 @@
-
-
 // Config
 angular.module('vAccordion.config', [])
   .constant('accordionConfig', {
     states: {
-      expanded: 'is-expanded'
+      expanded: 'is-expanded',
+      collapsed: 'is-collapsed'
     }
   });
 
